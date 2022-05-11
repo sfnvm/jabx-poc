@@ -13,7 +13,7 @@ public class PoolAutoConfiguration {
     public MarshallerPool tdiepXmlMarshallerPool(
             PoolConfig poolConfig,
             TdiepXmlMarshallerFactory tdiepXmlMarshallerFactory) {
-        // This must be set here. Otherwise, spring boot will report an error that a bean has been registered
+        // Deal with Spring beans
         poolConfig.setJmxEnabled(false);
         poolConfig.setMaxTotal(1000);
         return new MarshallerPool(tdiepXmlMarshallerFactory, poolConfig);
@@ -23,7 +23,7 @@ public class PoolAutoConfiguration {
     public UnmarshallerPool tdiepXmlUnmarshallerPool(
             PoolConfig poolConfig,
             TdiepXmlUnmarshallerFactory tdiepXmlUnmarshallerFactory) {
-        // This must be set here. Otherwise, spring boot will report an error that a bean has been registered
+        // Deal with Spring beans
         poolConfig.setJmxEnabled(false);
         poolConfig.setMaxTotal(1000);
         return new UnmarshallerPool(tdiepXmlUnmarshallerFactory, poolConfig);

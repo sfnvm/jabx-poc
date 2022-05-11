@@ -27,7 +27,7 @@ import java.util.stream.IntStream;
 class JaxbTests {
     private final TDiepHandler tDiepHandler;
 
-    private static final int TOTAL_DUPLICATED = 300000;
+    private static final int TOTAL_DUPLICATED = 100000;
 
     @Test
     void test001() throws IOException {
@@ -51,20 +51,35 @@ class JaxbTests {
         // Init input arr
         IntStream.range(0, TOTAL_DUPLICATED).forEach(value -> stringList.add(inputStr));
 
+        // Unmarshalling
         List<TDiepXml> tDiepXmls = stringList.parallelStream()
                 .map(FunctionExHandler.handling(tDiepHandler::fromXml))
                 .collect(Collectors.toList());
 
+        log.info("Sample data: {}", tDiepXmls.get(0));
+        log.info("==================================================");
+        log.info("TOTAL RECORDS: {}", TOTAL_DUPLICATED);
+        Instant unmarshallingMark = Instant.now();
+        log.info("Test001 UNMARSHALLING process done. Time taken: {}", Duration.between(startTime, unmarshallingMark));
+
+        // Marshalling
+        List<String> tDiepXmlStrs = tDiepXmls.parallelStream()
+                .map(FunctionExHandler.handling(tDiepHandler::toXml))
+                .collect(Collectors.toList());
+        log.info("Test001 MARSHALLING process done. Time taken: {}", Duration.between(unmarshallingMark, Instant.now()));
+
         // Force testcase to fail
         // tDiepXmls.get(0).setDlieu(null);
 
-        log.info("Sample data: {}", tDiepXmls.get(0));
-        log.info("Test001 core process done. Time taken: {}", Duration.between(startTime, Instant.now()));
+        log.info("Test001 CORE process done. Time taken: {}", Duration.between(startTime, Instant.now()));
 
         // Assertions
-        for (TDiepXml tDiepXml : tDiepXmls) {
-            Assertions.assertEquals(tDiepXmls.get(0), tDiepXml);
-        }
+        Assertions.assertEquals(tDiepXmlStrs.size(), tDiepXmls.size());
         Assertions.assertEquals(TOTAL_DUPLICATED, tDiepXmls.size());
+        Assertions.assertEquals(TOTAL_DUPLICATED, tDiepXmlStrs.size());
+        for (int i = 0; i < TOTAL_DUPLICATED; i++) {
+            Assertions.assertEquals(tDiepXmls.get(0), tDiepXmls.get(i));
+            Assertions.assertEquals(tDiepXmlStrs.get(0), tDiepXmlStrs.get(i));
+        }
     }
 }
