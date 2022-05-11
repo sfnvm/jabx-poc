@@ -49,8 +49,8 @@ public class JAXBUtil {
         JAXBContext jaxbContext = JAXBContextFactory.createContext(new Class[]{clazz}, null);
         Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
         jaxbMarshaller.setProperty(MarshallerProperties.CHARACTER_ESCAPE_HANDLER,
-                (CharacterEscapeHandler) (buffer, start, length, isAttributeValue, out) ->
-                        out.write(buffer, start, length));
+                (CharacterEscapeHandler) (buffer, start, length, isAttributeValue, out)
+                        -> out.write(buffer, start, length));
         jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
         if (!appendHeader) {
             jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
@@ -74,15 +74,14 @@ public class JAXBUtil {
         try {
             JAXBContext jaxbContext = JAXBContextFactory.createContext(new Class[]{clazz}, null);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
-
-//            unmarshaller.setEventHandler(event -> {
-//                String errorMsg = event.getMessage();
-//                if (errorMsg.contains("unexpected element")) {
-//                    log.warn("Cảnh báo XML chứa các thẻ không có trong chuẩn: {}", errorMsg);
-//                    return true;
-//                }
-//                throw new RuntimeException(errorMsg + "\nLocation: [" + event.getLocator().getLineNumber() + ":" + event.getLocator().getColumnNumber() + "]");
-//            });
+            // unmarshaller.setEventHandler(event -> {
+            //     String errorMsg = event.getMessage();
+            //     if (errorMsg.contains("unexpected element")) {
+            //         log.warn("Cảnh báo XML chứa các thẻ không có trong chuẩn: {}", errorMsg);
+            //         return true;
+            //     }
+            //     throw new RuntimeException(errorMsg + "\nLocation: [" + event.getLocator().getLineNumber() + ":" + event.getLocator().getColumnNumber() + "]");
+            // });
             return clazz.cast(unmarshaller.unmarshal(new StringReader(xmlString)));
 
         } catch (JAXBException ex) {

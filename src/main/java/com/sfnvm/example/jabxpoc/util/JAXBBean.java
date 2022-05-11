@@ -18,8 +18,8 @@ public class JAXBBean {
 
     private Marshaller initMarshaller(Marshaller marshaller) throws JAXBException {
         marshaller.setProperty(MarshallerProperties.CHARACTER_ESCAPE_HANDLER,
-                (CharacterEscapeHandler) (buffer, start, length, isAttributeValue, out) ->
-                        out.write(buffer, start, length));
+                (CharacterEscapeHandler) (buffer, start, length, isAttributeValue, out)
+                        -> out.write(buffer, start, length));
         marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.FALSE);
         marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE); // ignored append xml header
         return marshaller;
